@@ -6,6 +6,7 @@ import (
 	"time"
 	//	"os"
 	_ "github.com/lib/pq"
+	"github.com/pkg/errors"
 )
 
 // Example hold the results of our queries
@@ -27,7 +28,7 @@ func Setup() (*sql.DB, error) {
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Error during setup: %s\n", connStr)
 	}
 
 	return db, nil
