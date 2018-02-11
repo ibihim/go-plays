@@ -5,6 +5,7 @@ CONF_PATH=$(pwd)/auth.conf
 docker run                                                      \
     --rm                                                        \
     -it                                                         \
+    -d                                                          \
     -p 6379:6379                                                \
     -v "${CONF_PATH}":/usr/local/etc/redis/redis.conf           \
     --name test-redis                                           \
