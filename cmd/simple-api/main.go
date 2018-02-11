@@ -21,7 +21,7 @@ func main() {
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"})
 
-	fmt.Println("Runnin`g Server!")
+	fmt.Println("Running Server!")
 	log.Fatal(http.ListenAndServe(":3000", handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 }
 

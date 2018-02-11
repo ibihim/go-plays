@@ -13,7 +13,11 @@
 # limitations under the License.
 
 # The binary to build (just the basename).
-BIN := simple-api
+BIN := go-plays
+
+
+# This repo's root import path (under GOPATH).
+PKG := github.com/ibihim/go-plays
 
 # Where to push the docker image.
 REGISTRY ?= ibihim
@@ -25,7 +29,7 @@ ARCH ?= amd64
 VERSION := $(shell git describe --tags --always --dirty)
 #
 # This version-strategy uses a manual value to set the version string
-#VERSION := 1.2.3
+# VERSION := 1.2.3
 
 ###
 ### These variables should not need tweaking.
@@ -52,7 +56,7 @@ endif
 
 IMAGE := $(REGISTRY)/$(BIN)-$(ARCH)
 
-BUILD_IMAGE ?= golang:1.9-alpine
+BUILD_IMAGE ?= golang:1.9
 
 # If you want to build all binaries, see the 'all-build' rule.
 # If you want to build all containers, see the 'all-container' rule.
@@ -182,4 +186,4 @@ container-clean:
 	rm -rf .container-* .dockerfile-* .push-*
 
 bin-clean:
-rm -rf .go bin
+	rm -rf .go bin

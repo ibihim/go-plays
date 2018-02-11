@@ -1,2 +1,9 @@
 # IDE
 .idea
+
+# test binary
+*.test
+
+# build stuff
+.go
+/bin
