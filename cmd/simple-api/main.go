@@ -15,7 +15,7 @@ func main() {
 
 	router.HandleFunc("/healthcheck", healthcheck).Methods("GET")
 	router.HandleFunc("/message", handleQryMessage).Methods("GET")
-	router.HandleFunc("/m/{msg}", handleUrlMessage).Methods("GET")
+	router.HandleFunc("/m/{msg}", handleURLMessage).Methods("GET")
 
 	headersOk := handlers.AllowedHeaders([]string{"Authorization"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
@@ -32,7 +32,7 @@ func handleQryMessage(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": message})
 }
 
-func handleUrlMessage(w http.ResponseWriter, r *http.Request) {
+func handleURLMessage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	message := vars["msg"]
 
