@@ -29,7 +29,5 @@ func main() {
 		Envar("SENDER_EMAIL").
 		StringVar(&cfg.SenderEmail)
 
-	c := mailclient.New(&cfg)
-
-	c.sendEmail("Subjet", "Body")
+	mailclient.New(&cfg)
 }
