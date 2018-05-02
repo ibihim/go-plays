@@ -48,6 +48,12 @@
   version = "v1.6.1"
 
 [[projects]]
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
+
+[[projects]]
   name = "gopkg.in/alecthomas/kingpin.v2"
   packages = ["."]
   revision = "947dcec5ba9c011838740e680966fd7087a71d0d"
@@ -56,6 +62,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7611015fdc486f89ceeb019cd22fb81a44af98c53f36dd9391387d77c7bc0edf"
+  inputs-digest = "1dfc59df3d661e872d15a2764264f61ac94f5c5860df8ed1cfea51bdc680474a"
   solver-name = "gps-cdcl"
   solver-version = 1
