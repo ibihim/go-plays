@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/websocket"
 )
@@ -13,35 +12,40 @@ func main() {
 	addr := flag.String("addr", ":8080", "http service address")
 	flag.Parse()
 
-	upgrader := websocket.Upgrader{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
-	}
-
+	upgrader := websocket.Upgrader{}
+	http.HandleFunc("/echo", makeEcho(upgrader))
 	http.HandleFunc("/", handleHome)
-	http.HandleFunc("/ws", handleWS(upgrader))
 
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
 
-func handleHome(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "index.html")
+func makeEcho(upgrader websocket.Upgrader) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cnn, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println("upgrade:", err)
+			return
+		}
+		defer cnn.Close()
+
+		for {
+			msgType, msg, err := cnn.ReadMessage()
+			if err != nil {
+				log.Println("read:", err)
+				break
+			}
+
+			log.Printf("recv: %s\n", msg)
+
+			err = cnn.WriteMessage(msgType, msg)
+			if err != nil {
+				log.Println("write:", err)
+				break
+			}
+		}
+	}
 }
 
-func handleWS(upgrader websocket.Upgrader) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		conn, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		defer conn.Close()
-
-		outr, outw, err := os.Pipe()
-		if err != nil {
-			conn.WriteMessage(websocket.TextMessage, []byte(err.Error()))
-			return
-		}
-
-	}
+func handleHome(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "index.html")
 }
