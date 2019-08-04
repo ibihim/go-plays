@@ -20,9 +20,7 @@ func main() {
 		}
 
 		for {
-			select {
-
-			}
+			select {}
 		}
 
 		if err := pusher.Push("/data", nil); err != nil {
