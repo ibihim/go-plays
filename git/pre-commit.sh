@@ -1,4 +1,5 @@
-!/bin/sh
+#!/usr/bin/env bash
+
 # Copyright 2012 The Go Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
@@ -10,17 +11,27 @@
 #
 # This script does not handle file names that contain spaces.
 
-gofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '\.go$')
-[ -z "$gofiles" ] && exit 0
+# git diff shows difference between commits.
+# --cached is a synonym for --staged and it used to show staged files.
+# --name-only shows only the names of the files.
+# \.go$ is a pattern that selects only results that end with '.go'.
+STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.go$')
+[ -z "$STAGED_GO_FILES" ] && exit 0
 
-unformatted=$(gofmt -l $gofiles)
-[ -z "$unformatted" ] && exit 0
+for FILE in $STAGED_GO_FILES; do
+    gofmt -w $FILE
+    goimports -w $FILE
 
-# Some files are not gofmt'd. Print message and fail.
+    golint "-set_exit_status" $FILE
+    if [[ $? == 1 ]]; then
+        printf "golint erred\n"
+        exit 1
+    fi
 
-echo >&2 "Go files must be formatted with gofmt. Please run:"
-for fn in $unformatted; do
-	echo >&2 "  gofmt -w $PWD/$fn"
+    go vet $FILE
+    if [[ $? != 0 ]]; then
+        printf "go vet failed\n"
+    fi
 done
 
-exit 1
+exit 0
