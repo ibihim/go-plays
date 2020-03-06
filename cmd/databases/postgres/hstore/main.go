@@ -197,15 +197,17 @@ func selectValues(ctx context.Context, db *sql.DB) error {
 }
 
 func scanHstore(rows *sql.Rows) error {
-	var hs hstore.Hstore
-	if err := rows.Scan(&hs); err != nil {
+	var foo struct {
+		hs hstore.Hstore
+	}
+	if err := rows.Scan(&foo.hs); err != nil {
 		return fmt.Errorf("rows scan : %w", err)
 	}
 
 	log.Println("=========================================")
 
 	for _, key := range []string{"ISBN-13", "language", "paperback", "publisher", "weight"} {
-		value, ok := hs.Map[key]
+		value, ok := foo.hs.Map[key]
 		if !ok {
 			log.Println(key, "has no value")
 			continue
