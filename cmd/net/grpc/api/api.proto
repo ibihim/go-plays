@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/ibihim/go-plays/cmd/net/grpc/api";
+
+package api;
+
+service Time {
+    rpc GetTime(TimeRequest) returns (TimeResponse) {}
+}
+
+message TimeRequest {
+    string timezone = 1;
+}
+
+message TimeResponse {
+    string time = 1;
+}
